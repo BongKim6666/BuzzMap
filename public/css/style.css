@@ -1,0 +1,28 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#map {
+  height: 100%;
+}
+
+#addressInput {
+  width: 70%;
+  height: 50px;
+  position: fixed;
+  right: 0;
+  left: 0;
+  margin: auto;
+  padding-left: 20px;
+  bottom: 50px;
+  z-index: 998;
+  border: none;
+  border-radius: 90px;
+}
+
+#addressInput:focus {
+  outline: 2px solid #ffd931;
+}
