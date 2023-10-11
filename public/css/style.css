@@ -26,3 +26,16 @@ body {
 #addressInput:focus {
   outline: 2px solid #ffd931;
 }
+
+#locationButton {
+  position: absolute;
+  width: 60px;
+  height: 30px;
+  cursor: pointer;
+  z-index: 99999;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  appearance: none;
+  color: red;
+}
