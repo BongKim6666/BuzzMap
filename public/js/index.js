@@ -10,10 +10,10 @@ function initMap() {
     zoom: 12,
     center: myLatLng,
     fullscreenControl: false,
-    zoomControl: false,
+    zoomControl: true,
     streetViewControl: true,
-    mapTypeControl: false, //マップタイプ コントロール
-    streetViewControl: false, //ストリートビュー コントロール
+    mapTypeControl: false,
+    streetViewControl: true,
   });
 
   var input = document.getElementById("addressInput");
@@ -26,35 +26,30 @@ function initMap() {
     }
     map.setCenter(place.geometry.location);
 
-    // 移除先前的标记（如果有）
+    // Remove previous marker (if any)
     if (marker) {
       marker.setMap(null);
     }
 
-    // 添加新的标记
+    // Add a new marker
     marker = new google.maps.Marker({
       position: place.geometry.location,
       map: map,
       title: place.name,
     });
 
-    // 添加标记点击事件以显示详细信息
     google.maps.event.addListener(marker, "click", function () {
-      var placeId = place.place_id; // 获取地点的 Place ID
-
-      // 使用 Places API 获取详细信息
+      var placeId = place.place_id;
       var placesService = new google.maps.places.PlacesService(map);
       placesService.getDetails(
         { placeId: placeId },
         function (placeDetails, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            // 获取到地点的详细信息
             var name = placeDetails.name;
             var address = placeDetails.formatted_address;
             var phoneNumber = placeDetails.formatted_phone_number;
             var website = placeDetails.website;
 
-            // 显示详细信息
             alert(`
             Name: ${name}
             Address: ${address}
@@ -68,37 +63,28 @@ function initMap() {
       );
     });
   });
+
   infoWindow = new google.maps.InfoWindow();
-  console.log(infoWindow);
 
   const locationButton = document.getElementById("locationButton");
 
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-  locationButton.addEventListener("click", () => {
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          map.zoom = 18;
-          infoWindow.setPosition(pos);
-          infoWindow.setContent("現在位置です！");
-          infoWindow.open(map);
-          map.setCenter(pos);
-        },
-        () => {
-          handleLocationError(true, infoWindow, map.getCenter());
-        }
-      );
-    } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindow, map.getCenter());
-    }
+  locationButton.addEventListener("click", autoGetLocation);
+
+  // Add an event listener to the map for double-clicks
+  google.maps.event.addListener(map, "dblclick", function (event) {
+    const clickedLat = event.latLng.lat();
+    const clickedLng = event.latLng.lng();
+    console.log(event.latLng);
+    map.panTo(event.latLng);
+
+    // Do something with the latitude and longitude, e.g., display or use them
+    console.log(
+      "Double-clicked at Latitude: " + clickedLat + ", Longitude: " + clickedLng
+    );
   });
 }
+
 function autoGetLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
