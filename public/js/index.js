@@ -10,10 +10,11 @@ function initMap() {
     zoom: 12,
     center: myLatLng,
     fullscreenControl: false,
-    zoomControl: true,
-    streetViewControl: true,
+    zoomControl: false,
+    streetViewControl: false,
     mapTypeControl: false,
-    streetViewControl: true,
+    streetViewControl: false,
+    disableDoubleClickZoom: true
   });
 
   var input = document.getElementById("addressInput");
@@ -75,6 +76,15 @@ function initMap() {
   google.maps.event.addListener(map, "dblclick", function (event) {
     const clickedLat = event.latLng.lat();
     const clickedLng = event.latLng.lng();
+    const container = document.querySelector('.modal-container');
+    const latvar = document.querySelector('#latvar');
+    const lngvar = document.querySelector('#lngvar');
+
+    latvar.value = clickedLat;
+    lngvar.value = clickedLng;
+
+    container.classList.add('active');
+
     console.log(event.latLng);
     map.panTo(event.latLng);
 
